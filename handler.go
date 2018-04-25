@@ -18,6 +18,7 @@ type interactionHandler struct {
 	verificationToken string
 }
 
+
 func (h interactionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		log.Printf("[ERROR] Invalid method: %s", r.Method)
