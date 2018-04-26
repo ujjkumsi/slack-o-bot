@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/nlopes/slack"
+	"strings"
 )
 
 const (
@@ -49,14 +49,14 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 	}
 
 	// Only response mention to bot. Ignore else.
-	if !strings.HasPrefix(ev.Msg.Text, fmt.Sprintf("<@%s> ", s.botID)) {
+	if !strings.HasPrefix(ev.Text, fmt.Sprintf("<@%s> ", s.botID)) {
 		return nil
 	}
 
 	// Parse message
-	m := strings.Split(strings.TrimSpace(ev.Msg.Text), " ")[1:]
+	m := strings.Split(strings.TrimSpace(ev.Text), " ")[1:]
 	if len(m) == 0 || m[0] != "hey" {
-		return fmt.Errorf("invalid message")
+		return fmt.Errorf("invalid message %s", m)
 	}
 
 	// value is passed to message handler when request is approved.

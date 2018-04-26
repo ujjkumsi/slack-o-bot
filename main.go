@@ -90,7 +90,7 @@ func _main(args []string) int {
 		verificationToken: env.VerificationToken,
 	})
 
-	http.HandleFunc("/challenge", challengeHandler)
+	http.HandleFunc("/", challengeHandler)
 
 	log.Printf("[INFO] Server listening on :%s", env.Port)
 	if err := http.ListenAndServe(":"+env.Port, nil); err != nil {
