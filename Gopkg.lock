@@ -16,16 +16,12 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = [
-    "html",
-    "html/atom",
-    "websocket"
-  ]
+  packages = ["websocket"]
   revision = "84f0e6f92b10139f986b1756e149a7d9de270cdc"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "119508b396cf21d8ad35b1109f9546f90bdd8a87facf0a4c8e5d765ede080271"
+  inputs-digest = "9ba83715eb7013d93f67893b693ca9fbe4c09d0eb1ca83a7d62ca8e5a6f5932d"
   solver-name = "gps-cdcl"
   solver-version = 1
