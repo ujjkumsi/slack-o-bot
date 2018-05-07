@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/nlopes/slack"
-	"strings"
 )
 
 const (
@@ -33,7 +33,7 @@ func (s *SlackListener) ListenAndResponse() {
 	for msg := range rtm.IncomingEvents {
 		switch ev := msg.Data.(type) {
 		case *slack.MessageEvent:
-			if err := s.handleMessageEvent(ev); err != nil {
+			if err := s.handleMessageEvent(ev, rtm); err != nil {
 				log.Printf("[ERROR] Failed to handle message: %s", err)
 			}
 		}
@@ -41,7 +41,7 @@ func (s *SlackListener) ListenAndResponse() {
 }
 
 // handleMesageEvent handles message events.
-func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
+func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent, rtm *slack.RTM) error {
 	// Only response in specific channel. Ignore else.
 	if ev.Channel != s.channelID {
 		log.Printf("%s %s", ev.Channel, ev.Msg.Text)
@@ -55,10 +55,21 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 
 	// Parse message
 	m := strings.Split(strings.TrimSpace(ev.Text), " ")[1:]
-	if len(m) == 0 || m[0] != "hey" {
+	if len(m) == 0 {
 		return fmt.Errorf("invalid message %s", m)
 	}
 
+	query := strings.Join(m, " ")
+	log.Printf("Query : %s", query)
+
+	message := GetIntent(query)
+	log.Printf("Response : %s", message)
+	rtm.SendMessage(rtm.NewOutgoingMessage(message, ev.Channel))
+
+	return nil
+}
+
+func sendAttachments(s *SlackListener, ev *slack.MessageEvent) error {
 	// value is passed to message handler when request is approved.
 	attachment := slack.Attachment{
 		Text:       "Which beer do you want? :beer:",
@@ -112,4 +123,5 @@ func (s *SlackListener) handleMessageEvent(ev *slack.MessageEvent) error {
 	}
 
 	return nil
+
 }
